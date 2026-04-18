@@ -166,15 +166,8 @@
 
     .cover-scroll-line {
       width: 1px;
-      height: 28px;
+      height: 56px;
       background: var(--accent);
-    }
-
-    .cover-scroll-text {
-      font-family: var(--serif);
-      font-size: 9px;
-      color: #ccc;
-      letter-spacing: 2px;
     }
 
     @keyframes scrollBounce {
@@ -267,7 +260,7 @@
 
     .couple-name {
       font-family: var(--playfair);
-      font-size: 17px;
+      font-size: 20px;
       color: var(--text);
     }
 
@@ -328,9 +321,10 @@
 
     .venue-name {
       font-family: var(--playfair);
-      font-size: 15px;
-      color: var(--text);
+      font-size: 13px;
+      color: #888;
       margin-bottom: 6px;
+      line-height: 1.8;
     }
 
     .venue-address {
@@ -468,7 +462,7 @@
 
     .contact-name {
       font-family: var(--playfair);
-      font-size: 15px;
+      font-size: 18px;
       color: var(--text);
       margin-bottom: 5px;
     }
@@ -530,15 +524,15 @@
     </div>
     <div class="cover-scroll" aria-hidden="true">
       <div class="cover-scroll-line"></div>
-      <p class="cover-scroll-text">SCROLL</p>
     </div>
   </section>
 
   <!-- MAIN PHOTO -->
   <div id="main-photo" class="fade-up">
     <div class="main-photo-wrap">
-      <img src="/images/cover.jpg" alt="메인 사진" onerror="this.style.display='none'">
-      <p class="photo-placeholder-text">메인 사진</p>
+      <img src="/images/cover.jpg" alt="메인 사진"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+      <p class="photo-placeholder-text" style="display:none">메인 사진</p>
     </div>
   </div>
 
@@ -549,8 +543,9 @@
     <div class="couple-grid">
       <div class="couple-item">
         <div class="couple-photo">
-          <img src="/images/groom.jpg" alt="신랑 최예환" onerror="this.style.display='none'">
-          <p class="couple-photo-text">사진</p>
+          <img src="/images/groom.jpg" alt="신랑 최예환"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <p class="couple-photo-text" style="display:none">사진</p>
         </div>
         <div>
           <p class="couple-role">GROOM</p>
@@ -559,8 +554,9 @@
       </div>
       <div class="couple-item">
         <div class="couple-photo">
-          <img src="/images/bride.jpg" alt="신부 곽유진" onerror="this.style.display='none'">
-          <p class="couple-photo-text">사진</p>
+          <img src="/images/bride.jpg" alt="신부 곽유진"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+          <p class="couple-photo-text" style="display:none">사진</p>
         </div>
         <div>
           <p class="couple-role">BRIDE</p>
@@ -596,21 +592,21 @@
     </p>
   </section>
 
+  <!-- GALLERY -->
+  <section id="gallery" class="section fade-up">
+    <p class="section-label">Gallery</p>
+    <div class="thin-divider"></div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+
   <!-- DATE & VENUE -->
   <section id="venue" class="section fade-up">
     <p class="section-label">Date &amp; Venue</p>
     <div class="thin-divider"></div>
     <p class="venue-date">2026.05.09</p>
     <p class="venue-day">SATURDAY</p>
-    <div class="venue-h-divider"></div>
-    <p class="venue-name">서울 종로구 효자동</p>
-  </section>
-
-  <!-- GALLERY -->
-  <section id="gallery" class="section fade-up">
-    <p class="section-label">Gallery</p>
-    <div class="thin-divider"></div>
-    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="red-divider"></div>
+    <p class="venue-name">서울 종로구 서촌<br>까델루뽀 Ca'del lupo</p>
   </section>
 
   <!-- CONTACT -->
@@ -657,7 +653,7 @@
   images.forEach((img, idx) => {
     const item = document.createElement('div');
     item.className = 'gallery-item';
-    item.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy" onerror="this.style.display='none'"><span class="gallery-num">${idx + 1}</span>`;
+    item.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"><span class="gallery-num" style="display:none">${idx + 1}</span>`;
     item.addEventListener('click', () => openLightbox(idx));
     grid.appendChild(item);
   });
