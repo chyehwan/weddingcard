@@ -52,7 +52,7 @@
 
     .section-label {
       font-family: var(--serif);
-      font-size: 10px;
+      font-size: 12px;
       letter-spacing: 3px;
       color: var(--muted);
       text-transform: uppercase;
@@ -71,7 +71,7 @@
       width: 32px;
       height: 1px;
       background: var(--accent);
-      margin: 20px auto;
+      margin: 32px auto;
     }
 
     .fade-up {
@@ -120,12 +120,17 @@
     }
 
     .cover-title {
+      position: relative;
+      z-index: 2;
       font-family: var(--script);
-      font-size: clamp(44px, 14vw, 58px);
+      font-size: clamp(44px, 14.5vw, 60px);
       font-weight: 600;
       color: #111;
       line-height: 1.2;
-      margin-bottom: 32px;
+      margin-top: 20px;
+      margin-bottom: 0;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .cover-names {
@@ -139,16 +144,9 @@
     .cover-date {
       font-family: var(--display);
       font-size: 19px;
-      color: var(--text);
+      color: #999;
       letter-spacing: 1px;
       margin-bottom: 6px;
-    }
-
-    .cover-day {
-      font-family: var(--serif);
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 3px;
     }
 
     .cover-scroll {
@@ -164,10 +162,72 @@
       animation: scrollBounce 2s ease-in-out infinite;
     }
 
-    .cover-scroll-line {
-      width: 1px;
-      height: 56px;
-      background: var(--accent);
+    .cover-scroll-dots {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cover-scroll-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #bbb;
+      opacity: 0;
+      animation: dotFade 1.8s ease-in-out infinite;
+    }
+
+    .cover-scroll-dot:nth-child(1) { animation-delay: 0s; }
+    .cover-scroll-dot:nth-child(2) { animation-delay: 0.4s; }
+    .cover-scroll-dot:nth-child(3) { animation-delay: 0.8s; }
+
+    @keyframes dotFade {
+      0%, 100% { opacity: 0; transform: translateY(-4px); }
+      50%       { opacity: 1; transform: translateY(0); }
+    }
+
+    .cover-heart {
+      font-size: 11px;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 2;
+      animation: heartBounce 1.4s ease-in-out infinite;
+    }
+
+    .couple-heart {
+      font-size: 14px;
+      color: var(--accent);
+      align-self: center;
+      flex-shrink: 0;
+      animation: heartBounce 1.4s ease-in-out infinite;
+    }
+
+    @keyframes heartBounce {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-5px) scale(1.15); }
+    }
+
+    .cover-illust-label {
+      position: relative;
+      z-index: 2;
+      font-family: var(--serif);
+      font-size: 15px;
+      color: #999;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .cover-illust {
+      position: relative;
+      z-index: 2;
+      width: 58%;
+      max-width: 240px;
+      margin-bottom: 60px;
+      display: block;
     }
 
     @keyframes scrollBounce {
@@ -175,9 +235,31 @@
       50%       { transform: translateX(-50%) translateY(6px); }
     }
 
+    #cover::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 44%;
+      background: linear-gradient(to bottom, #ebe7e3 0%, #ffffff 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ===== COVER CORNERS ===== */
+    .corner {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      z-index: 3;
+    }
+    .corner-tl { top: 24px; left: 24px; border-top: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+    .corner-tr { top: 24px; right: 24px; border-top: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+    .corner-bl { bottom: 120px; left: 24px; border-bottom: 1.5px solid var(--accent); border-left: 1.5px solid var(--accent); }
+    .corner-br { bottom: 120px; right: 24px; border-bottom: 1.5px solid var(--accent); border-right: 1.5px solid var(--accent); }
+
     /* ===== MAIN PHOTO ===== */
     #main-photo {
-      padding: 28px 28px;
+      padding: 48px 28px 28px;
       border-bottom: 0.5px solid var(--border);
     }
 
@@ -252,7 +334,7 @@
 
     .couple-role {
       font-family: var(--serif);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 2px;
       margin-bottom: 5px;
@@ -333,12 +415,54 @@
       color: var(--muted);
     }
 
+    /* ===== GALLERY SLIDER ===== */
+    .gallery-slider-wrap {
+      overflow: hidden;
+      margin-bottom: 20px;
+      margin-left: -32px;
+      margin-right: -32px;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%);
+    }
+
+    .gallery-slider-track {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+      animation: slideScroll 18s linear infinite;
+    }
+
+    .gallery-slider-track:hover {
+      animation-play-state: paused;
+    }
+
+    .gallery-slide-item {
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--placeholder-bg);
+    }
+
+    .gallery-slide-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    @keyframes slideScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
     /* ===== GALLERY ===== */
     #gallery {}
 
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
     }
 
@@ -454,7 +578,7 @@
 
     .contact-role {
       font-family: var(--serif);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 2px;
       margin-bottom: 7px;
@@ -510,20 +634,25 @@
 
   <!-- COVER -->
   <section id="cover">
-    <div class="cover-bg-text" aria-hidden="true">
-      <div>26</div>
-      <div>05</div>
-      <div>09</div>
-    </div>
+    <div class="corner corner-tl" aria-hidden="true"></div>
+    <div class="corner corner-tr" aria-hidden="true"></div>
+    <div class="corner corner-bl" aria-hidden="true"></div>
+    <div class="corner corner-br" aria-hidden="true"></div>
     <div class="cover-content">
-      <p class="cover-title">Wedding Day</p>
-      <p class="cover-names">최예환 · 곽유진</p>
-      <div class="red-divider" style="margin:10px auto 14px;"></div>
+      <p class="cover-illust-label">결혼합니다</p>
+      <p class="cover-heart" aria-hidden="true">♥</p>
+      <p class="cover-names">예환 · 유진</p>
+      <div class="red-divider" style="margin:20px auto 22px;"></div>
       <p class="cover-date">2026.05.09</p>
-      <p class="cover-day">SATURDAY</p>
     </div>
+    <p class="cover-title">Wedding Day</p>
+    <img src="/images/illust.png" alt="" aria-hidden="true" class="cover-illust">
     <div class="cover-scroll" aria-hidden="true">
-      <div class="cover-scroll-line"></div>
+      <div class="cover-scroll-dots">
+        <div class="cover-scroll-dot"></div>
+        <div class="cover-scroll-dot"></div>
+        <div class="cover-scroll-dot"></div>
+      </div>
     </div>
   </section>
 
@@ -552,6 +681,7 @@
           <p class="couple-name">최예환</p>
         </div>
       </div>
+      <p class="couple-heart" aria-hidden="true">♥</p>
       <div class="couple-item">
         <div class="couple-photo">
           <img src="/images/bride.jpg" alt="신부 곽유진"
@@ -573,18 +703,17 @@
     <p class="greeting-main">
       따뜻한 봄 날,<br>
       저희 두 사람이 결혼합니다.<br>
-      결혼을 축하해주셔서 감사합니다.
+      결혼을 축하해주신 모든 분들에게<br>
+      진심으로 감사의 말씀을 드립니다.
     </p>
     <div class="red-divider"></div>
     <p class="greeting-sub">
-      저희의 작은 시작을<br>
-      가족들과 함께 나누려 합니다.<br><br>
-      직접 뵙고 인사드리지 못하는 분들께<br>
-      진심으로 감사의 마음을 전하며,<br>
-      앞으로의 날들도<br>
-      따뜻하게 지켜봐 주시길 바랍니다.
+      양가 가족들과 함께<br>
+      소박한 예식을 올리게 되었습니다.<br><br>
+      너그러운 마음으로 이해해주시고,<br>
+      저희의 앞날을 축복해 주시면 감사드리겠습니다.
     </p>
-    <div class="thin-divider" style="margin-top:22px;"></div>
+    <br>
     <p class="greeting-sig">
       신랑 <strong style="color:var(--text);font-weight:500;">최예환</strong>
       &nbsp;·&nbsp;
@@ -596,6 +725,10 @@
   <section id="gallery" class="section fade-up">
     <p class="section-label">Gallery</p>
     <div class="thin-divider"></div>
+    <div class="gallery-slider-wrap">
+      <div class="gallery-slider-track" id="gallery-slider"></div>
+    </div>
+    <div class="red-divider" style="margin:40px auto;"></div>
     <div class="gallery-grid" id="gallery-grid"></div>
   </section>
 
@@ -647,6 +780,15 @@
     src: `/images/gallery-${i + 1}.jpg`,
     alt: `갤러리 사진 ${i + 1}`
   }));
+
+  // Build slider (images × 2 for seamless loop)
+  const slider = document.getElementById('gallery-slider');
+  [...images, ...images].forEach(img => {
+    const item = document.createElement('div');
+    item.className = 'gallery-slide-item';
+    item.innerHTML = `<img src="${img.src}" alt="${img.alt}" loading="lazy">`;
+    slider.appendChild(item);
+  });
 
   // Build gallery
   const grid = document.getElementById('gallery-grid');
