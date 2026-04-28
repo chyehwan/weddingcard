@@ -10,6 +10,8 @@
   <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400&display=block" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400&family=Dancing+Script:wght@600&family=Caveat:wght@400;600&family=Gaegu:wght@400;700&family=Playfair+Display:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,7 +23,7 @@
       --border: #ece8e4;
       --placeholder-bg: #f5f0ee;
       --placeholder-border: #e0d8d4;
-      --serif: 'Cormorant Garamond', serif;
+      --serif: 'Noto Serif KR', 'Cormorant Garamond', serif;
       --display: 'Cinzel Decorative', serif;
       --script: 'Dancing Script', cursive;
       --playfair: 'Playfair Display', serif;
@@ -492,11 +494,12 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
+      background: #f0ebe6;
       z-index: 9999;
       align-items: center;
       justify-content: center;
       flex-direction: column;
+      overflow: hidden;
     }
 
     .lightbox.open {
@@ -508,6 +511,7 @@
       max-height: 80svh;
       object-fit: contain;
       border-radius: 4px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
     }
 
     .lightbox-close {
@@ -515,36 +519,19 @@
       top: 20px;
       right: 24px;
       font-size: 32px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(0,0,0,0.35);
       cursor: pointer;
       background: none;
       border: none;
       line-height: 1;
     }
 
-    .lightbox-close:hover { color: #fff; }
-
-    .lightbox-nav {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 36px;
-      color: rgba(255,255,255,0.6);
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 16px;
-      line-height: 1;
-    }
-
-    .lightbox-nav:hover { color: #fff; }
-    .lightbox-prev { left: 4px; }
-    .lightbox-next { right: 4px; }
+    .lightbox-close:hover { color: var(--text); }
 
     .lightbox-counter {
       font-family: var(--serif);
       font-size: 12px;
-      color: rgba(255,255,255,0.4);
+      color: #bbb;
       letter-spacing: 2px;
       margin-top: 14px;
     }
@@ -757,9 +744,7 @@
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="갤러리">
   <button class="lightbox-close" id="lb-close" aria-label="닫기">×</button>
-  <button class="lightbox-nav lightbox-prev" id="lb-prev" aria-label="이전">&#8249;</button>
   <img class="lightbox-img" id="lb-img" src="" alt="">
-  <button class="lightbox-nav lightbox-next" id="lb-next" aria-label="다음">&#8250;</button>
   <p class="lightbox-counter" id="lb-counter"></p>
 </div>
 
@@ -809,22 +794,51 @@
     document.body.style.overflow = '';
   }
 
+  let isAnimating = false;
+
   function navigate(dir) {
-    current = (current + dir + images.length) % images.length;
-    lbImg.src = images[current].src;
-    lbImg.alt = images[current].alt;
-    lbCounter.textContent = `${current + 1} / ${images.length}`;
+    if (isAnimating) return;
+    isAnimating = true;
+
+    const outX = dir > 0 ? '-80px' : '80px';
+    const inX  = dir > 0 ?  '80px' : '-80px';
+
+    lbImg.style.transform = `translateX(${outX})`;
+    lbImg.style.opacity = '0';
+
+    setTimeout(() => {
+      current = (current + dir + images.length) % images.length;
+      lbImg.src = images[current].src;
+      lbImg.alt = images[current].alt;
+      lbCounter.textContent = `${current + 1} / ${images.length}`;
+
+      lbImg.style.transition = 'none';
+      lbImg.style.transform = `translateX(${inX})`;
+      lbImg.style.opacity = '0';
+
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        lbImg.style.transition = 'transform 0.25s ease, opacity 0.25s ease';
+        lbImg.style.transform = 'translateX(0)';
+        lbImg.style.opacity = '1';
+        isAnimating = false;
+      }));
+    }, 220);
   }
 
   document.getElementById('lb-close').addEventListener('click', closeLightbox);
-  document.getElementById('lb-prev').addEventListener('click', () => navigate(-1));
-  document.getElementById('lb-next').addEventListener('click', () => navigate(1));
   lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('open')) return;
     if (e.key === 'Escape')     closeLightbox();
     if (e.key === 'ArrowLeft')  navigate(-1);
     if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  let touchStartX = 0;
+  lb.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
   });
 
   // Fade-up on scroll
